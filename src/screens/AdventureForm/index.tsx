@@ -2,7 +2,9 @@ import { View, Text } from 'react-native';
 import React, { useState } from 'react';
 import { colors } from '../../styles/colors';
 import AppHeader from '../../components/AppHeader';
-import { TextInput } from 'react-native-paper';
+import { Button, TextInput } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
+import { RootStackNavigationProp } from '../../navigation';
 
 interface AdventureFormInputs {
 	name: string;
@@ -12,6 +14,7 @@ interface AdventureFormInputs {
 }
 
 const AdventureForm = () => {
+	const navigation = useNavigation<RootStackNavigationProp>();
 	const [form, setForm] = useState<AdventureFormInputs>({
 		name: '',
 		description: '',
@@ -74,6 +77,23 @@ const AdventureForm = () => {
 					textColor={colors.onSurface}
 					right={<TextInput.Icon icon='image' />}
 				/>
+				<View
+					style={{
+						marginTop: 16,
+						justifyContent: 'flex-end',
+						display: 'flex',
+						flexDirection: 'row',
+					}}
+				>
+					<Button
+						mode='contained'
+						onPress={() => navigation.reset({ index: 0, routes: [{ name: 'Adventures' }] })}
+						style={{ backgroundColor: colors.primary }}
+						textColor={colors.black}
+					>
+						Adicionar
+					</Button>
+				</View>
 			</View>
 		</>
 	);

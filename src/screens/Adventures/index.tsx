@@ -4,8 +4,11 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { colors } from '../../styles/colors';
 import { Button, Headline, Text } from 'react-native-paper';
 import AppHeader from '../../components/AppHeader';
+import { useNavigation } from '@react-navigation/native';
+import { RootStackNavigationProp } from '../../navigation';
 
 const Adventures = () => {
+	const navigation = useNavigation<RootStackNavigationProp>();
 	return (
 		<>
 			<AppHeader title='Minhas aventuras' icon='magnify' onPress={() => {}} />
@@ -19,7 +22,7 @@ const Adventures = () => {
 				</Text>
 				<Button
 					mode='contained'
-					onPress={() => {}}
+					onPress={() => navigation.navigate('AdventureForm')}
 					style={{ marginTop: 16, backgroundColor: colors.primary }}
 					textColor={colors.black}
 				>

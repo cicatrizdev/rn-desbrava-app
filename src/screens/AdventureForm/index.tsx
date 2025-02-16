@@ -1,11 +1,11 @@
-import { View, Text, Pressable } from 'react-native';
+import { View, Text, Pressable, Alert, Linking } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { colors } from '../../styles/colors';
 import AppHeader from '../../components/AppHeader';
 import { Button, TextInput } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { RootStackNavigationProp } from '../../navigation';
-import { useCameraPermissions } from 'expo-camera';
+import { CameraView, useCameraPermissions } from 'expo-camera';
 
 interface AdventureFormInputs {
 	name: string;
@@ -17,6 +17,7 @@ interface AdventureFormInputs {
 const AdventureForm = () => {
 	const navigation = useNavigation<RootStackNavigationProp>();
 	const [permission, requestPermission] = useCameraPermissions();
+	const [isCameraActive, setIsCameraActive] = useState(false);
 	const [form, setForm] = useState<AdventureFormInputs>({
 		name: '',
 		description: '',
@@ -76,11 +77,25 @@ const AdventureForm = () => {
 					numberOfLines={6}
 				/>
 				<Pressable
+					style={{ width: '100%', height: 80, zIndex: 10 }}
 					onPress={() => {
 						if (!!permission && permission.status === 'denied') {
-							return requestPermission();
+							return Alert.alert(
+								'Permissão Necessária',
+								'Para utilizar esse recurso, você precisa permitir o acesso à câmera no seu dispositivo',
+								[
+									{
+										text: 'Cancelar',
+										style: 'cancel',
+									},
+									{
+										text: 'Abrir Configurações',
+										onPress: () => Linking.openSettings(),
+									},
+								]
+							);
 						}
-						return null;
+						return setIsCameraActive(true);
 					}}
 				>
 					<TextInput
@@ -113,6 +128,7 @@ const AdventureForm = () => {
 					</Button>
 				</View>
 			</View>
+			<CameraView />
 		</>
 	);
 };

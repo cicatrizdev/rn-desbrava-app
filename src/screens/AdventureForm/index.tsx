@@ -14,7 +14,7 @@ const AdventureForm = () => {
 	const [permission, requestPermission] = useCameraPermissions();
 	const cameraRef = useRef<CameraView>(null);
 	const [isCameraActive, setIsCameraActive] = useState(false);
-	const { addAdventure } = useAdventures();
+	const { adventures, addAdventure } = useAdventures();
 	const [form, setForm] = useState<Adventure>({
 		id: '',
 		name: '',
@@ -31,6 +31,11 @@ const AdventureForm = () => {
 		const photo = await cameraRef.current?.takePictureAsync();
 		setForm({ ...form, image: photo?.uri });
 		setIsCameraActive(false);
+	};
+
+	const handleAddAdventure = () => {
+		addAdventure({ ...form, id: (adventures.length + 1).toString() });
+		navigation.reset({ index: 0, routes: [{ name: 'Adventures' }] });
 	};
 
 	useEffect(() => {
@@ -181,7 +186,7 @@ const AdventureForm = () => {
 						>
 							<Button
 								mode='contained'
-								onPress={() => navigation.reset({ index: 0, routes: [{ name: 'Adventures' }] })}
+								onPress={handleAddAdventure}
 								style={{ backgroundColor: colors.primary }}
 								textColor={colors.black}
 							>

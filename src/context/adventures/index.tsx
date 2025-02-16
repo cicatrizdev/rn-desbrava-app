@@ -8,7 +8,10 @@ export interface Adventure {
 	image?: string;
 }
 
-export const AdventuresContext = createContext({});
+export const AdventuresContext = createContext({
+	adventures: [],
+	addAdventure: (adventure: Adventure) => {},
+});
 
 export const AdventuresProvider = ({ children }: { children: React.ReactNode }) => {
 	const [adventures, setAdventures] = useState<Adventure[]>([]);

@@ -1,11 +1,12 @@
 import { View, Text, Pressable, Alert, Linking } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { colors } from '../../styles/colors';
 import AppHeader from '../../components/AppHeader';
 import { Button, TextInput } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { RootStackNavigationProp } from '../../navigation';
 import { CameraView, useCameraPermissions } from 'expo-camera';
+import { Image } from 'expo-image';
 
 interface AdventureFormInputs {
 	name: string;
@@ -17,6 +18,7 @@ interface AdventureFormInputs {
 const AdventureForm = () => {
 	const navigation = useNavigation<RootStackNavigationProp>();
 	const [permission, requestPermission] = useCameraPermissions();
+	const cameraRef = useRef<CameraView>(null);
 	const [isCameraActive, setIsCameraActive] = useState(false);
 	const [form, setForm] = useState<AdventureFormInputs>({
 		name: '',
@@ -27,6 +29,12 @@ const AdventureForm = () => {
 
 	const handleInputChange = (key: keyof AdventureFormInputs, value: string) => {
 		setForm({ ...form, [key]: value });
+	};
+
+	const handleTakePicture = async () => {
+		const photo = await cameraRef.current?.takePictureAsync();
+		setForm({ ...form, image: photo?.uri });
+		setIsCameraActive(false);
 	};
 
 	useEffect(() => {
@@ -44,7 +52,7 @@ const AdventureForm = () => {
 						icon='close'
 						onPress={() => setIsCameraActive(false)}
 					/>
-					<CameraView style={{ flex: 1, width: '100%' }} mode='picture' />
+					<CameraView style={{ flex: 1, width: '100%' }} mode='picture' ref={cameraRef} />
 					<View
 						style={{
 							position: 'absolute',
@@ -56,7 +64,7 @@ const AdventureForm = () => {
 						}}
 					>
 						<Pressable
-							onPress={() => setIsCameraActive(false)}
+							onPress={handleTakePicture}
 							style={{
 								backgroundColor: 'transparent',
 								borderWidth: 5,
@@ -73,7 +81,7 @@ const AdventureForm = () => {
 								icon='camera'
 								size={30}
 								color={colors.primary}
-								onPress={() => setIsCameraActive(false)}
+								onPress={handleTakePicture}
 							/>
 						</Pressable>
 					</View>
@@ -119,40 +127,47 @@ const AdventureForm = () => {
 							multiline
 							numberOfLines={6}
 						/>
-						<Pressable
-							style={{ width: '100%', height: 80, zIndex: 10 }}
-							onPress={() => {
-								if (!!permission && permission.status === 'denied') {
-									return Alert.alert(
-										'Permissão Necessária',
-										'Para utilizar esse recurso, você precisa permitir o acesso à câmera no seu dispositivo',
-										[
-											{
-												text: 'Cancelar',
-												style: 'cancel',
-											},
-											{
-												text: 'Abrir Configurações',
-												onPress: () => Linking.openSettings(),
-											},
-										]
-									);
-								}
-								return setIsCameraActive(true);
-							}}
-						>
-							<TextInput
-								label='Adicionar uma imagem'
-								placeholder='Adicionar uma imagem'
-								style={{ backgroundColor: colors.surface, marginTop: 16 }}
-								mode='outlined'
-								outlineColor={colors.outline}
-								activeOutlineColor={colors.outline}
-								textColor={colors.onSurface}
-								right={<TextInput.Icon icon='upload' />}
-								readOnly
+						{!!form.image && form.image.length > 0 ? (
+							<Image
+								source={{ uri: form.image }}
+								style={{ width: '100%', height: 200, marginTop: 16 }}
 							/>
-						</Pressable>
+						) : (
+							<Pressable
+								style={{ width: '100%', height: 80, zIndex: 10 }}
+								onPress={() => {
+									if (!!permission && permission.status === 'denied') {
+										return Alert.alert(
+											'Permissão Necessária',
+											'Para utilizar esse recurso, você precisa permitir o acesso à câmera no seu dispositivo',
+											[
+												{
+													text: 'Cancelar',
+													style: 'cancel',
+												},
+												{
+													text: 'Abrir Configurações',
+													onPress: () => Linking.openSettings(),
+												},
+											]
+										);
+									}
+									return setIsCameraActive(true);
+								}}
+							>
+								<TextInput
+									label='Adicionar uma imagem'
+									placeholder='Adicionar uma imagem'
+									style={{ backgroundColor: colors.surface, marginTop: 16 }}
+									mode='outlined'
+									outlineColor={colors.outline}
+									activeOutlineColor={colors.outline}
+									textColor={colors.onSurface}
+									right={<TextInput.Icon icon='upload' />}
+									readOnly
+								/>
+							</Pressable>
+						)}
 						<View
 							style={{
 								marginTop: 16,

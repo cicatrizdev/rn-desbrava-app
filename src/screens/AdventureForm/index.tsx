@@ -1,4 +1,4 @@
-import { View, Text, Pressable, Alert, Linking } from 'react-native';
+import { View, Text, Pressable, Alert, Linking, ScrollView } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { colors } from '../../styles/colors';
 import AppHeader from '../../components/AppHeader';
@@ -7,27 +7,23 @@ import { useNavigation } from '@react-navigation/native';
 import { RootStackNavigationProp } from '../../navigation';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { Image } from 'expo-image';
-
-interface AdventureFormInputs {
-	name: string;
-	description?: string;
-	date?: string;
-	image?: string;
-}
+import { Adventure, useAdventures } from '../../context/adventures';
 
 const AdventureForm = () => {
 	const navigation = useNavigation<RootStackNavigationProp>();
 	const [permission, requestPermission] = useCameraPermissions();
 	const cameraRef = useRef<CameraView>(null);
 	const [isCameraActive, setIsCameraActive] = useState(false);
-	const [form, setForm] = useState<AdventureFormInputs>({
+	const { addAdventure } = useAdventures();
+	const [form, setForm] = useState<Adventure>({
+		id: '',
 		name: '',
 		description: '',
 		date: '',
 		image: '',
 	});
 
-	const handleInputChange = (key: keyof AdventureFormInputs, value: string) => {
+	const handleInputChange = (key: keyof Adventure, value: string) => {
 		setForm({ ...form, [key]: value });
 	};
 
@@ -89,7 +85,7 @@ const AdventureForm = () => {
 			) : (
 				<>
 					<AppHeader title='Adicionar aventura' showBackButton />
-					<View style={{ marginHorizontal: 16, marginTop: 16 }}>
+					<ScrollView style={{ marginHorizontal: 16, marginTop: 16 }}>
 						<TextInput
 							label='Nome'
 							placeholder='Nome da aventura'
@@ -130,7 +126,14 @@ const AdventureForm = () => {
 						{!!form.image && form.image.length > 0 ? (
 							<Image
 								source={{ uri: form.image }}
-								style={{ width: '100%', height: 200, marginTop: 16 }}
+								style={{
+									width: '100%',
+									marginTop: 16,
+									aspectRatio: 1,
+									borderWidth: 1,
+									borderColor: colors.outline,
+								}}
+								contentFit='contain'
 							/>
 						) : (
 							<Pressable
@@ -185,7 +188,7 @@ const AdventureForm = () => {
 								Adicionar
 							</Button>
 						</View>
-					</View>
+					</ScrollView>
 				</>
 			)}
 		</>

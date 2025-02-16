@@ -75,7 +75,14 @@ const AdventureForm = () => {
 					multiline
 					numberOfLines={6}
 				/>
-				<Pressable>
+				<Pressable
+					onPress={() => {
+						if (!!permission && permission.status === 'denied') {
+							return requestPermission();
+						}
+						return null;
+					}}
+				>
 					<TextInput
 						label='Adicionar uma imagem'
 						placeholder='Adicionar uma imagem'

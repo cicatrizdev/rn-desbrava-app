@@ -6,6 +6,7 @@ export interface Adventure {
 	description?: string;
 	date?: string;
 	image?: string;
+	location?: any;
 }
 
 export const AdventuresContext = createContext({

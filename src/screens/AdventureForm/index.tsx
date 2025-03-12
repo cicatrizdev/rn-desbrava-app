@@ -101,6 +101,7 @@ const AdventureForm = () => {
 							outlineColor={colors.outline}
 							activeOutlineColor={colors.outline}
 							textColor={colors.onSurface}
+							multiline
 						/>
 						<TextInput
 							label='Data'
@@ -141,40 +142,30 @@ const AdventureForm = () => {
 								contentFit='contain'
 							/>
 						) : (
-							<Pressable
-								style={{ width: '100%', height: 80, zIndex: 10 }}
+							<TextInput
+								label='Adicionar uma imagem'
+								placeholder='Adicionar uma imagem'
+								style={{ backgroundColor: colors.surface, marginTop: 16 }}
+								mode='outlined'
+								outlineColor={colors.outline}
+								activeOutlineColor={colors.outline}
+								textColor={colors.onSurface}
+								right={<TextInput.Icon icon='upload' />}
+								readOnly
 								onPress={() => {
 									if (!!permission && permission.status === 'denied') {
 										return Alert.alert(
 											'Permissão Necessária',
 											'Para utilizar esse recurso, você precisa permitir o acesso à câmera no seu dispositivo',
 											[
-												{
-													text: 'Cancelar',
-													style: 'cancel',
-												},
-												{
-													text: 'Abrir Configurações',
-													onPress: () => Linking.openSettings(),
-												},
+												{ text: 'Cancelar', style: 'cancel' },
+												{ text: 'Abrir Configurações', onPress: () => Linking.openSettings() },
 											]
 										);
 									}
 									return setIsCameraActive(true);
 								}}
-							>
-								<TextInput
-									label='Adicionar uma imagem'
-									placeholder='Adicionar uma imagem'
-									style={{ backgroundColor: colors.surface, marginTop: 16 }}
-									mode='outlined'
-									outlineColor={colors.outline}
-									activeOutlineColor={colors.outline}
-									textColor={colors.onSurface}
-									right={<TextInput.Icon icon='upload' />}
-									readOnly
-								/>
-							</Pressable>
+							/>
 						)}
 						<View
 							style={{

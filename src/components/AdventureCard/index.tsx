@@ -41,7 +41,13 @@ const AdventureCard = (adventure: Adventure) => {
 					{adventure.description}
 				</Text>
 			</View>
-			<Icon name='pencil' size={24} color={colors.onSurface} style={{ marginLeft: 8 }} />
+			<Icon
+				name='pencil'
+				size={24}
+				color={colors.onSurface}
+				style={{ marginLeft: 8 }}
+				onPress={() => {}}
+			/>
 		</View>
 	);
 };

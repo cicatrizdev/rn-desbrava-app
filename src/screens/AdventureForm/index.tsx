@@ -1,4 +1,4 @@
-import { View, Text, Pressable, Alert, Linking, ScrollView } from 'react-native';
+import { View, Text, Pressable, Alert, Linking, ScrollView, TouchableOpacity } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { colors } from '../../styles/colors';
 import AppHeader from '../../components/AppHeader';
@@ -44,12 +44,26 @@ const AdventureForm = () => {
 		}
 	}, [permission]);
 
+	const handleAddImage = () => {
+		if (!!permission && permission.status === 'denied') {
+			return Alert.alert(
+				'Permissão Necessária',
+				'Para utilizar esse recurso, você precisa permitir o acesso à câmera no seu dispositivo',
+				[
+					{ text: 'Cancelar', style: 'cancel' },
+					{ text: 'Abrir Configurações', onPress: () => Linking.openSettings() },
+				]
+			);
+		}
+		return setIsCameraActive(true);
+	};
+
 	return (
 		<>
 			{isCameraActive ? (
 				<>
 					<AppHeader
-						title='Adicionar imagem'
+						title={form.id ? 'Alterar imagem' : 'Adicionar imagem'}
 						icon='close'
 						onPress={() => setIsCameraActive(false)}
 					/>
@@ -142,30 +156,20 @@ const AdventureForm = () => {
 								contentFit='contain'
 							/>
 						) : (
-							<TextInput
-								label='Adicionar uma imagem'
-								placeholder='Adicionar uma imagem'
-								style={{ backgroundColor: colors.surface, marginTop: 16 }}
-								mode='outlined'
-								outlineColor={colors.outline}
-								activeOutlineColor={colors.outline}
-								textColor={colors.onSurface}
-								right={<TextInput.Icon icon='upload' />}
-								readOnly
-								onPress={() => {
-									if (!!permission && permission.status === 'denied') {
-										return Alert.alert(
-											'Permissão Necessária',
-											'Para utilizar esse recurso, você precisa permitir o acesso à câmera no seu dispositivo',
-											[
-												{ text: 'Cancelar', style: 'cancel' },
-												{ text: 'Abrir Configurações', onPress: () => Linking.openSettings() },
-											]
-										);
-									}
-									return setIsCameraActive(true);
-								}}
-							/>
+							<TouchableOpacity onPress={handleAddImage} style={{ height: 80, zIndex: 10 }}>
+								<TextInput
+									label='Adicionar uma imagem'
+									placeholder='Adicionar uma imagem'
+									style={{ backgroundColor: colors.surface, marginTop: 16 }}
+									mode='outlined'
+									outlineColor={colors.outline}
+									activeOutlineColor={colors.outline}
+									textColor={colors.onSurface}
+									right={<TextInput.Icon icon='upload' />}
+									readOnly
+									onPress={handleAddImage}
+								/>
+							</TouchableOpacity>
 						)}
 						<View
 							style={{

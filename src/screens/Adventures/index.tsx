@@ -8,6 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import { RootStackNavigationProp } from '../../navigation';
 import { useAdventures } from '../../context/adventures';
 import AdventureCard from '../../components/AdventureCard';
+import MapView from 'react-native-maps';
 
 const EmptyAdventure = () => {
 	const navigation = useNavigation<RootStackNavigationProp>();
@@ -66,6 +67,7 @@ const Adventures = () => {
 					</>
 				)}
 			</View>
+			<MapView style={{ flex: 1 }} onPress={(param) => console.log(param, 'Hello World')} />
 		</>
 	);
 };

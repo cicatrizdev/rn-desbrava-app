@@ -156,6 +156,15 @@ const AdventureForm = () => {
 				style={{ flex: 1, width: '100%' }}
 				region={region}
 				onRegionChangeComplete={setRegion}
+				onDoublePress={(event) => {
+					const { latitude, longitude } = event.nativeEvent.coordinate;
+					setRegion({
+						...region,
+						latitude,
+						longitude,
+					});
+					searchLocation(`${latitude}, ${longitude}`);
+				}}
 			>
 				{selectedLocation && (
 					<Marker
@@ -163,7 +172,7 @@ const AdventureForm = () => {
 							latitude: selectedLocation.latitude,
 							longitude: selectedLocation.longitude,
 						}}
-						title='Localização selecionada'
+						title={selectedLocation.address}
 					/>
 				)}
 			</MapView>
@@ -179,8 +188,6 @@ const AdventureForm = () => {
 			>
 				<TextInput
 					label='Pesquisar'
-					placeholder='Pesquisar localização'
-					value={form.location?.address}
 					style={{ backgroundColor: colors.surface, marginTop: 16, width: '100%' }}
 					textColor={colors.onSurface}
 					right={<TextInput.Icon icon='magnify' />}
@@ -237,6 +244,7 @@ const AdventureForm = () => {
 						value={form.location}
 						style={{ backgroundColor: colors.surface, marginTop: 16 }}
 						mode='outlined'
+						multiline
 						outlineColor={colors.outline}
 						activeOutlineColor={colors.outline}
 						textColor={colors.onSurface}

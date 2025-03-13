@@ -1,4 +1,13 @@
-import { View, Text, Pressable, Alert, Linking, ScrollView, TouchableOpacity } from 'react-native';
+import {
+	View,
+	Text,
+	Pressable,
+	Alert,
+	Linking,
+	ScrollView,
+	TouchableOpacity,
+	Platform,
+} from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { colors } from '../../styles/colors';
 import AppHeader from '../../components/AppHeader';
@@ -153,6 +162,7 @@ const AdventureForm = () => {
 		<>
 			<AppHeader title={'Localização'} icon='close' onPress={() => setIsMapViewActive(false)} />
 			<MapView
+				provider={Platform.OS === 'android' ? 'google' : undefined}
 				style={{ flex: 1, width: '100%' }}
 				region={region}
 				onRegionChangeComplete={setRegion}

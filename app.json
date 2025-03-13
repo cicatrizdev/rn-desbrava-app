@@ -1,7 +1,14 @@
 {
-  "expo": {
-    "name": "rn-desbrava-app",
-    "slug": "rn-desbrava-app",
-    "version": "1.0.0"
-  }
+	"expo": {
+		"name": "rn-desbrava-app",
+		"slug": "rn-desbrava-app",
+		"version": "1.0.0"
+	},
+	"android": {
+		"config": {
+			"googleMaps": {
+				"apiKey": "process.env.GOOGLE_MAPS_API_KEY"
+			}
+		}
+	}
 }

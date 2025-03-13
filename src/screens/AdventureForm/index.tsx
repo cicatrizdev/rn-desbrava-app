@@ -8,7 +8,7 @@ import { RootStackNavigationProp } from '../../navigation';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { Image } from 'expo-image';
 import { Adventure, useAdventures } from '../../context/adventures';
-import MapView, { Region } from 'react-native-maps';
+import MapView, { Marker, Region } from 'react-native-maps';
 import * as Location from 'expo-location';
 
 const AdventureForm = () => {
@@ -50,6 +50,16 @@ const AdventureForm = () => {
 					latitude,
 					longitude,
 				});
+				const address = await Location.reverseGeocodeAsync({ latitude, longitude });
+				if (address.length > 0) {
+					const locationName = `${address[0].street}, ${address[0].city}, ${address[0].region}`;
+					setSelectedLocation({
+						latitude,
+						longitude,
+						address: locationName,
+					});
+					setForm({ ...form, location: locationName });
+				}
 			}
 		} catch (error) {
 			console.error('Error searching location:', error);
@@ -141,12 +151,22 @@ const AdventureForm = () => {
 
 	const MapComponent = () => (
 		<>
-			<AppHeader
-				title={form.location ? 'Alterar Localização' : 'Adicionar Localização'}
-				icon='close'
-				onPress={() => setIsMapViewActive(false)}
-			/>
-			<MapView style={{ flex: 1, width: '100%' }} />
+			<AppHeader title={'Localização'} icon='close' onPress={() => setIsMapViewActive(false)} />
+			<MapView
+				style={{ flex: 1, width: '100%' }}
+				region={region}
+				onRegionChangeComplete={setRegion}
+			>
+				{selectedLocation && (
+					<Marker
+						coordinate={{
+							latitude: selectedLocation.latitude,
+							longitude: selectedLocation.longitude,
+						}}
+						title='Localização selecionada'
+					/>
+				)}
+			</MapView>
 			<View
 				style={{
 					position: 'absolute',
@@ -159,9 +179,12 @@ const AdventureForm = () => {
 			>
 				<TextInput
 					label='Pesquisar'
-					placeholder=''
-					value={form.location}
+					placeholder='Pesquisar localização'
+					value={form.location?.address}
 					style={{ backgroundColor: colors.surface, marginTop: 16, width: '100%' }}
+					textColor={colors.onSurface}
+					right={<TextInput.Icon icon='magnify' />}
+					onSubmitEditing={(event) => searchLocation(event.nativeEvent.text)}
 				/>
 			</View>
 		</>

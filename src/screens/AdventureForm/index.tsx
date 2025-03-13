@@ -8,12 +8,14 @@ import { RootStackNavigationProp } from '../../navigation';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { Image } from 'expo-image';
 import { Adventure, useAdventures } from '../../context/adventures';
+import MapView from 'react-native-maps';
 
 const AdventureForm = () => {
 	const navigation = useNavigation<RootStackNavigationProp>();
 	const [permission, requestPermission] = useCameraPermissions();
 	const cameraRef = useRef<CameraView>(null);
 	const [isCameraActive, setIsCameraActive] = useState(false);
+	const [isMapViewActive, setIsMapViewActive] = useState(false);
 	const { adventures, addAdventure } = useAdventures();
 	const [form, setForm] = useState<Adventure>({
 		id: '',
@@ -106,8 +108,40 @@ const AdventureForm = () => {
 		</>
 	);
 
+	const MapComponent = () => (
+		<>
+			<AppHeader
+				title={form.location ? 'Alterar Localização' : 'Adicionar Localização'}
+				icon='close'
+				onPress={() => setIsMapViewActive(false)}
+			/>
+			<MapView style={{ flex: 1, width: '100%' }} />
+			<View
+				style={{
+					position: 'absolute',
+					top: 120,
+					width: '100%',
+					alignItems: 'center',
+					justifyContent: 'space-between',
+					paddingHorizontal: 60,
+				}}
+			>
+				<TextInput
+					label='Pesquisar'
+					placeholder=''
+					value={form.location}
+					style={{ backgroundColor: colors.surface, marginTop: 16, width: '100%' }}
+				/>
+			</View>
+		</>
+	);
+
 	if (isCameraActive) {
 		return <CameraComponent />;
+	}
+
+	if (isMapViewActive) {
+		return <MapComponent />;
 	}
 
 	return (
@@ -139,7 +173,10 @@ const AdventureForm = () => {
 					right={<TextInput.Icon icon='calendar' />}
 					keyboardType='email-address'
 				/>
-				<TouchableOpacity onPress={handleAddImage} style={{ height: 80, zIndex: 10 }}>
+				<TouchableOpacity
+					onPress={() => setIsMapViewActive(true)}
+					style={{ height: 80, zIndex: 10 }}
+				>
 					<TextInput
 						label='Localização'
 						placeholder='Adicionar uma localização'
@@ -151,7 +188,7 @@ const AdventureForm = () => {
 						textColor={colors.onSurface}
 						right={<TextInput.Icon icon='map-marker' />}
 						readOnly
-						onPress={handleAddImage}
+						onPress={() => setIsMapViewActive(true)}
 					/>
 				</TouchableOpacity>
 				<TextInput

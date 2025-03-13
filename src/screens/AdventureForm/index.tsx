@@ -196,25 +196,27 @@ const AdventureForm = () => {
 					onSubmitEditing={(event) => searchLocation(event.nativeEvent.text)}
 				/>
 			</View>
-			<View
-				style={{
-					position: 'absolute',
-					bottom: 50,
-					width: '100%',
-					alignItems: 'center',
-					justifyContent: 'center',
-					paddingHorizontal: 30,
-				}}
-			>
-				<Button
-					mode='contained'
-					onPress={() => setIsMapViewActive(false)}
-					style={{ backgroundColor: colors.primary }}
-					textColor={colors.black}
+			{!!selectedLocation && (
+				<View
+					style={{
+						position: 'absolute',
+						bottom: 50,
+						width: '100%',
+						alignItems: 'center',
+						justifyContent: 'center',
+						paddingHorizontal: 30,
+					}}
 				>
-					Confirmar Localização
-				</Button>
-			</View>
+					<Button
+						mode='contained'
+						onPress={() => setIsMapViewActive(false)}
+						style={{ backgroundColor: colors.primary }}
+						textColor={colors.black}
+					>
+						Confirmar Localização
+					</Button>
+				</View>
+			)}
 		</>
 	);
 

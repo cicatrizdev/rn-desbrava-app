@@ -8,7 +8,8 @@ import { RootStackNavigationProp } from '../../navigation';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { Image } from 'expo-image';
 import { Adventure, useAdventures } from '../../context/adventures';
-import MapView from 'react-native-maps';
+import MapView, { Region } from 'react-native-maps';
+import * as Location from 'expo-location';
 
 const AdventureForm = () => {
 	const navigation = useNavigation<RootStackNavigationProp>();
@@ -25,6 +26,36 @@ const AdventureForm = () => {
 		image: '',
 		location: null,
 	});
+
+	const [region, setRegion] = useState<Region>({
+		latitude: -23.55052,
+		longitude: -46.633308,
+		latitudeDelta: 0.0922,
+		longitudeDelta: 0.0421,
+	});
+
+	const [selectedLocation, setSelectedLocation] = useState<{
+		latitude: number;
+		longitude: number;
+		address: string;
+	} | null>(null);
+
+	const searchLocation = async (query: string) => {
+		try {
+			const response = await Location.geocodeAsync(query);
+			if (response.length > 0) {
+				const { latitude, longitude } = response[0];
+				setRegion({
+					...region,
+					latitude,
+					longitude,
+				});
+			}
+		} catch (error) {
+			console.error('Error searching location:', error);
+			Alert.alert('Erro', 'Não foi possível encontrar a localização');
+		}
+	};
 
 	const handleInputChange = (key: keyof Adventure, value: string) => {
 		setForm({ ...form, [key]: value });

@@ -1,15 +1,18 @@
-import { View } from 'react-native';
+import { Pressable, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { Adventure } from '../../context/adventures';
+import { Adventure, useAdventures } from '../../context/adventures';
 import { colors } from '../../styles/colors';
 import { Text } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Image } from 'expo-image';
 import * as Location from 'expo-location';
+import { useNavigation } from '@react-navigation/native';
+import { RootStackNavigationProp } from '../../navigation';
 
-const AdventureCard = (adventure: Adventure, onEditPress: () => void) => {
+const AdventureCard = (adventure: Adventure) => {
 	const [userLocation, setUserLocation] = useState<Location.LocationObject | null>(null);
-
+	const navigation = useNavigation<RootStackNavigationProp>();
+	const { setCurrentAdventure } = useAdventures();
 	useEffect(() => {
 		Location.requestForegroundPermissionsAsync();
 		Location.watchPositionAsync({ accuracy: Location.Accuracy.High }, (location) => {
@@ -63,21 +66,25 @@ const AdventureCard = (adventure: Adventure, onEditPress: () => void) => {
 					<Text variant='bodyMedium' style={{ color: colors.onSurface }} numberOfLines={1}>
 						{adventure.date}
 					</Text>
-					<Text variant='bodyMedium' style={{ color: colors.onSurface }} numberOfLines={1}>
-						{' '}
-						- {adventure.location.address.split(', ')[1]}
-					</Text>
+					{adventure.location && (
+						<Text variant='bodyMedium' style={{ color: colors.onSurface }} numberOfLines={1}>
+							{' '}
+							- {adventure?.location.address.split(', ')[1]}
+						</Text>
+					)}
 				</View>
-				<Text variant='bodyMedium' style={{ color: colors.onSurface }} numberOfLines={1}>
-					{calculateDistance(
-						userLocation?.coords.latitude,
-						userLocation?.coords.longitude,
-						adventure.location.latitude,
-						adventure.location.longitude
-					)}{' '}
-					km
-					<Icon name='map-marker' size={10} color={colors.onSurface} />
-				</Text>
+				{adventure.location && (
+					<Text variant='bodyMedium' style={{ color: colors.onSurface }} numberOfLines={1}>
+						{calculateDistance(
+							userLocation?.coords.latitude,
+							userLocation?.coords.longitude,
+							adventure.location.latitude,
+							adventure.location.longitude
+						)}{' '}
+						km
+						<Icon name='map-marker' size={10} color={colors.onSurface} />
+					</Text>
+				)}
 				<Text variant='titleMedium' style={{ color: colors.onSurface }} numberOfLines={1}>
 					{adventure.name}
 				</Text>
@@ -85,13 +92,14 @@ const AdventureCard = (adventure: Adventure, onEditPress: () => void) => {
 					{adventure.description}
 				</Text>
 			</View>
-			<Icon
-				name='pencil'
-				size={24}
-				color={colors.onSurface}
-				style={{ marginLeft: 8 }}
-				onPress={onEditPress}
-			/>
+			<TouchableOpacity
+				onPress={() => {
+					setCurrentAdventure(adventure);
+					navigation.navigate('AdventureForm');
+				}}
+			>
+				<Icon name='pencil' size={24} color={colors.onSurface} style={{ marginLeft: 8 }} />
+			</TouchableOpacity>
 		</View>
 	);
 };

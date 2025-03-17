@@ -21,6 +21,7 @@ import MapView, { Marker, Region } from 'react-native-maps';
 import * as Location from 'expo-location';
 
 const AdventureForm = () => {
+	const { currentAdventure } = useAdventures();
 	const navigation = useNavigation<RootStackNavigationProp>();
 	const [cameraPermission, requestCameraPermission] = useCameraPermissions();
 	const [locationPermission, requestLocationPermission] = Location.useForegroundPermissions();
@@ -29,12 +30,12 @@ const AdventureForm = () => {
 	const [isMapViewActive, setIsMapViewActive] = useState(false);
 	const { adventures, addAdventure } = useAdventures();
 	const [form, setForm] = useState<Adventure>({
-		id: '',
-		name: '',
-		description: '',
-		date: '',
-		image: '',
-		location: null,
+		id: currentAdventure?.id || '',
+		name: currentAdventure?.name || '',
+		description: currentAdventure?.description || '',
+		date: currentAdventure?.date || '',
+		image: currentAdventure?.image || '',
+		location: currentAdventure?.location || null,
 	});
 
 	const [region, setRegion] = useState<Region>({
@@ -256,7 +257,7 @@ const AdventureForm = () => {
 
 	return (
 		<>
-			<AppHeader title='Adicionar aventura' showBackButton />
+			<AppHeader title={form.id ? 'Alterar aventura' : 'Adicionar aventura'} showBackButton />
 			<ScrollView style={{ marginHorizontal: 16, marginTop: 16 }}>
 				<TextInput
 					label='Nome'

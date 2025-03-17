@@ -46,17 +46,10 @@ const Adventures = () => {
 					<>
 						<FlatList
 							data={adventures}
-							renderItem={({ item }) => (
-								<AdventureCard
-									key={item.id}
-									{...item}
-									onEditPress={() => {
-										setCurrentAdventure(item);
-										navigation.navigate('AdventureForm');
-									}}
-								/>
-							)}
+							renderItem={({ item }) => <AdventureCard key={item.id} {...item} />}
 							style={{ flex: 1 }}
+							contentContainerStyle={{ flex: 1 }}
+							ItemSeparatorComponent={() => <Divider style={{ marginVertical: 8 }} />}
 						/>
 						<IconButton
 							icon='plus'

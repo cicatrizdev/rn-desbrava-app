@@ -62,7 +62,10 @@ const AdventureForm = () => {
 				});
 				const address = await Location.reverseGeocodeAsync({ latitude, longitude });
 				if (address.length > 0) {
-					const locationName = `${address[0].street}, ${address[0].city}, ${address[0].region}`;
+					const locationName =
+						Platform.OS === 'android'
+							? address[0].formattedAddress
+							: `${address[0].street}, ${address[0].city}, ${address[0].region}`;
 					setSelectedLocation({
 						latitude,
 						longitude,
@@ -179,7 +182,6 @@ const AdventureForm = () => {
 				provider={Platform.OS === 'android' ? 'google' : undefined}
 				style={{ flex: 1, width: '100%' }}
 				region={region}
-				onRegionChangeComplete={setRegion}
 				onDoublePress={(event) => {
 					const { latitude, longitude } = event.nativeEvent.coordinate;
 					setRegion({

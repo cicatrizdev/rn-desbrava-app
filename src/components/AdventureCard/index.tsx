@@ -31,9 +31,15 @@ const AdventureCard = (adventure: Adventure) => {
 					marginLeft: 8,
 				}}
 			>
-				<Text variant='bodyMedium' style={{ color: colors.onSurface }} numberOfLines={1}>
-					{adventure.date}
-				</Text>
+				<View style={{ flexDirection: 'row', alignItems: 'center' }}>
+					<Text variant='bodyMedium' style={{ color: colors.onSurface }} numberOfLines={1}>
+						{adventure.date}
+					</Text>
+					<Text variant='bodyMedium' style={{ color: colors.onSurface }} numberOfLines={1}>
+						{' '}
+						- {adventure.location.split(', ')[1]}
+					</Text>
+				</View>
 				<Text variant='titleMedium' style={{ color: colors.onSurface }} numberOfLines={1}>
 					{adventure.name}
 				</Text>

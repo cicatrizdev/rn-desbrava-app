@@ -71,7 +71,7 @@ const AdventureForm = () => {
 						longitude,
 						address: locationName,
 					});
-					setForm({ ...form, location: locationName });
+					setForm({ ...form, location: { address: locationName, latitude, longitude } });
 				}
 			}
 		} catch (error) {
@@ -287,7 +287,7 @@ const AdventureForm = () => {
 					<TextInput
 						label='Localização'
 						placeholder='Adicionar uma localização'
-						value={form.location}
+						value={form.location?.address}
 						style={{ backgroundColor: colors.surface, marginTop: 16 }}
 						mode='outlined'
 						multiline

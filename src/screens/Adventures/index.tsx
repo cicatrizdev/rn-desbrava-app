@@ -35,7 +35,7 @@ const EmptyAdventure = () => {
 
 const Adventures = () => {
 	const navigation = useNavigation<RootStackNavigationProp>();
-	const { adventures } = useAdventures();
+	const { adventures, setCurrentAdventure } = useAdventures();
 	return (
 		<>
 			<AppHeader title='Minhas aventuras' icon='magnify' onPress={() => {}} />
@@ -46,10 +46,17 @@ const Adventures = () => {
 					<>
 						<FlatList
 							data={adventures}
-							renderItem={({ item }) => <AdventureCard key={item.id} {...item} />}
+							renderItem={({ item }) => (
+								<AdventureCard
+									key={item.id}
+									{...item}
+									onEditPress={() => {
+										setCurrentAdventure(item);
+										navigation.navigate('AdventureForm');
+									}}
+								/>
+							)}
 							style={{ flex: 1 }}
-							contentContainerStyle={{ flex: 1 }}
-							ItemSeparatorComponent={() => <Divider style={{ marginVertical: 8 }} />}
 						/>
 						<IconButton
 							icon='plus'

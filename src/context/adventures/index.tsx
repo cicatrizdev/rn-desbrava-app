@@ -6,23 +6,32 @@ export interface Adventure {
 	description?: string;
 	date?: string;
 	image?: string;
-	location?: any;
+	location?: {
+		address: string;
+		latitude: number;
+		longitude: number;
+	};
 }
 
 export const AdventuresContext = createContext({
 	adventures: [],
+	currentAdventure: null,
+	setCurrentAdventure: (adventure: Adventure) => {},
 	addAdventure: (adventure: Adventure) => {},
 });
 
 export const AdventuresProvider = ({ children }: { children: React.ReactNode }) => {
 	const [adventures, setAdventures] = useState<Adventure[]>([]);
+	const [currentAdventure, setCurrentAdventure] = useState<Adventure | null>(null);
 
 	const addAdventure = (adventure: Adventure) => {
 		setAdventures([...adventures, adventure]);
 	};
 
 	return (
-		<AdventuresContext.Provider value={{ adventures, addAdventure }}>
+		<AdventuresContext.Provider
+			value={{ adventures, addAdventure, currentAdventure, setCurrentAdventure }}
+		>
 			{children}
 		</AdventuresContext.Provider>
 	);

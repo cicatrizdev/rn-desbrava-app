@@ -22,7 +22,8 @@ import * as Location from 'expo-location';
 
 const AdventureForm = () => {
 	const navigation = useNavigation<RootStackNavigationProp>();
-	const [permission, requestPermission] = useCameraPermissions();
+	const [cameraPermission, requestCameraPermission] = useCameraPermissions();
+	const [locationPermission, requestLocationPermission] = Location.useForegroundPermissions();
 	const cameraRef = useRef<CameraView>(null);
 	const [isCameraActive, setIsCameraActive] = useState(false);
 	const [isMapViewActive, setIsMapViewActive] = useState(false);
@@ -92,13 +93,16 @@ const AdventureForm = () => {
 	};
 
 	useEffect(() => {
-		if (!!permission && !permission.granted) {
-			requestPermission();
+		if (!!cameraPermission && !cameraPermission.granted) {
+			requestCameraPermission();
 		}
-	}, [permission]);
+		if (!!locationPermission && !locationPermission.granted) {
+			requestLocationPermission();
+		}
+	}, [cameraPermission, locationPermission]);
 
 	const handleAddImage = () => {
-		if (!!permission && permission.status === 'denied') {
+		if (!!cameraPermission && cameraPermission.status === 'denied') {
 			return Alert.alert(
 				'Permissão Necessária',
 				'Para utilizar esse recurso, você precisa permitir o acesso à câmera no seu dispositivo',
@@ -112,7 +116,17 @@ const AdventureForm = () => {
 	};
 
 	const handleAddLocation = () => {
-		console.log('handleAddLocation');
+		if (!!locationPermission && locationPermission.status === 'denied') {
+			return Alert.alert(
+				'Permissão Necessária',
+				'Para utilizar esse recurso, você precisa permitir o acesso à localização no seu dispositivo',
+				[
+					{ text: 'Cancelar', style: 'cancel' },
+					{ text: 'Abrir Configurações', onPress: () => Linking.openSettings() },
+				]
+			);
+		}
+		return setIsMapViewActive(true);
 	};
 
 	const CameraComponent = () => (
@@ -267,10 +281,7 @@ const AdventureForm = () => {
 					right={<TextInput.Icon icon='calendar' />}
 					keyboardType='email-address'
 				/>
-				<TouchableOpacity
-					onPress={() => setIsMapViewActive(true)}
-					style={{ height: 80, zIndex: 10 }}
-				>
+				<TouchableOpacity onPress={handleAddLocation} style={{ height: 80, zIndex: 10 }}>
 					<TextInput
 						label='Localização'
 						placeholder='Adicionar uma localização'
@@ -283,7 +294,7 @@ const AdventureForm = () => {
 						textColor={colors.onSurface}
 						right={<TextInput.Icon icon='map-marker' />}
 						readOnly
-						onPress={() => setIsMapViewActive(true)}
+						onPress={handleAddLocation}
 					/>
 				</TouchableOpacity>
 				<TextInput

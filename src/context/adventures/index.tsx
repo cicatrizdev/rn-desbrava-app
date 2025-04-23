@@ -16,8 +16,9 @@ export interface Adventure {
 export const AdventuresContext = createContext({
 	adventures: [],
 	currentAdventure: null,
-	setCurrentAdventure: (adventure: Adventure) => {},
+	setCurrentAdventure: (adventure: Adventure | null) => {},
 	addAdventure: (adventure: Adventure) => {},
+	editAdventure: (adventure: Adventure) => {},
 });
 
 export const AdventuresProvider = ({ children }: { children: React.ReactNode }) => {
@@ -28,9 +29,13 @@ export const AdventuresProvider = ({ children }: { children: React.ReactNode }) 
 		setAdventures([...adventures, adventure]);
 	};
 
+	const editAdventure = (adventure: Adventure) => {
+		setAdventures(adventures.map((a) => (a.id === adventure.id ? adventure : a)));
+	};
+
 	return (
 		<AdventuresContext.Provider
-			value={{ adventures, addAdventure, currentAdventure, setCurrentAdventure }}
+			value={{ adventures, addAdventure, currentAdventure, setCurrentAdventure, editAdventure }}
 		>
 			{children}
 		</AdventuresContext.Provider>

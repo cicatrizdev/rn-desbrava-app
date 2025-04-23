@@ -51,14 +51,14 @@ const isValidDate = (dateStr: string): boolean => {
 };
 
 const AdventureForm = () => {
-	const { currentAdventure } = useAdventures();
 	const navigation = useNavigation<RootStackNavigationProp>();
 	const [cameraPermission, requestCameraPermission] = useCameraPermissions();
 	const [locationPermission, requestLocationPermission] = Location.useForegroundPermissions();
 	const cameraRef = useRef<CameraView>(null);
 	const [isCameraActive, setIsCameraActive] = useState(false);
 	const [isMapViewActive, setIsMapViewActive] = useState(false);
-	const { adventures, addAdventure } = useAdventures();
+	const { adventures, addAdventure, currentAdventure, editAdventure, setCurrentAdventure } =
+		useAdventures();
 	const [form, setForm] = useState<Adventure>({
 		id: currentAdventure?.id || '',
 		name: currentAdventure?.name || '',
@@ -122,7 +122,12 @@ const AdventureForm = () => {
 	};
 
 	const handleAddAdventure = () => {
-		addAdventure({ ...form, id: (adventures.length + 1).toString() });
+		if (form.id) {
+			editAdventure({ ...form, id: currentAdventure?.id });
+			setCurrentAdventure(null);
+		} else {
+			addAdventure({ ...form, id: (adventures.length + 1).toString() });
+		}
 		navigation.reset({ index: 0, routes: [{ name: 'Adventures' }] });
 	};
 
@@ -292,7 +297,14 @@ const AdventureForm = () => {
 
 	return (
 		<>
-			<AppHeader title={form.id ? 'Alterar aventura' : 'Adicionar aventura'} showBackButton />
+			<AppHeader
+				title={form.id ? 'Alterar aventura' : 'Adicionar aventura'}
+				icon='close'
+				onPress={() => {
+					setCurrentAdventure(null);
+					navigation.goBack();
+				}}
+			/>
 			<ScrollView style={{ marginHorizontal: 16, marginTop: 16 }}>
 				<TextInput
 					label='Nome'
@@ -392,7 +404,7 @@ const AdventureForm = () => {
 						style={{ backgroundColor: colors.primary }}
 						textColor={colors.black}
 					>
-						Adicionar
+						{form.id ? 'Alterar' : 'Adicionar'}
 					</Button>
 				</View>
 			</ScrollView>

@@ -1,4 +1,4 @@
-import { Pressable, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { Adventure, useAdventures } from '../../context/adventures';
 import { colors } from '../../styles/colors';
@@ -73,14 +73,14 @@ const AdventureCard = (adventure: Adventure) => {
 						</Text>
 					)}
 				</View>
-				{adventure.location && (
+				{adventure.location && userLocation && (
 					<Text variant='bodyMedium' style={{ color: colors.onSurface }} numberOfLines={1}>
 						{calculateDistance(
 							userLocation?.coords.latitude,
 							userLocation?.coords.longitude,
 							adventure.location.latitude,
 							adventure.location.longitude
-						)}{' '}
+						)}
 						km
 						<Icon name='map-marker' size={10} color={colors.onSurface} />
 					</Text>

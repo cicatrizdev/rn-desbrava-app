@@ -20,6 +20,36 @@ import { Adventure, useAdventures } from '../../context/adventures';
 import MapView, { Marker, Region } from 'react-native-maps';
 import * as Location from 'expo-location';
 
+const formatDate = (input: string): string => {
+	const numbers = input.replace(/\D/g, '');
+
+	let formatted = '';
+	if (numbers.length > 0) {
+		formatted += numbers.substring(0, 2);
+	}
+	if (numbers.length > 2) {
+		formatted += '/' + numbers.substring(2, 4);
+	}
+	if (numbers.length > 4) {
+		formatted += '/' + numbers.substring(4, 8);
+	}
+
+	return formatted;
+};
+
+const isValidDate = (dateStr: string): boolean => {
+	if (!dateStr || dateStr.length !== 10) return false;
+
+	const [day, month, year] = dateStr.split('/').map(Number);
+
+	if (day < 1 || day > 31) return false;
+	if (month < 1 || month > 12) return false;
+	if (year < 1900 || year > 2100) return false;
+
+	const date = new Date(year, month - 1, day);
+	return date.getDate() === day && date.getMonth() === month - 1 && date.getFullYear() === year;
+};
+
 const AdventureForm = () => {
 	const { currentAdventure } = useAdventures();
 	const navigation = useNavigation<RootStackNavigationProp>();
@@ -131,6 +161,11 @@ const AdventureForm = () => {
 			);
 		}
 		return setIsMapViewActive(true);
+	};
+
+	const handleDateChange = (text: string) => {
+		const formatted = formatDate(text);
+		setForm({ ...form, date: formatted });
 	};
 
 	const CameraComponent = () => (
@@ -273,16 +308,18 @@ const AdventureForm = () => {
 				/>
 				<TextInput
 					label='Data'
-					placeholder='XX/XX/XXXX'
+					placeholder='DD/MM/AAAA'
 					value={form.date}
-					onChangeText={(text) => handleInputChange('date', text)}
+					onChangeText={handleDateChange}
 					style={{ backgroundColor: colors.surface, marginTop: 16 }}
 					mode='outlined'
-					outlineColor={colors.outline}
-					activeOutlineColor={colors.outline}
+					outlineColor={form.date && !isValidDate(form.date) ? 'red' : colors.outline}
+					activeOutlineColor={form.date && !isValidDate(form.date) ? 'red' : colors.outline}
 					textColor={colors.onSurface}
 					right={<TextInput.Icon icon='calendar' />}
-					keyboardType='email-address'
+					keyboardType='numeric'
+					maxLength={10}
+					error={form.date ? !isValidDate(form.date) : false}
 				/>
 				<TouchableOpacity onPress={handleAddLocation} style={{ height: 80, zIndex: 10 }}>
 					<TextInput

@@ -4,8 +4,30 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Button, Text } from 'react-native-paper';
 import { colors } from '../../styles/colors';
 import AppHeader from '../../components/AppHeader';
+import notifee from '@notifee/react-native';
 
 const Notifications = () => {
+	const testNotification = async () => {
+		await notifee.requestPermission();
+
+		const channelId = await notifee.createChannel({
+			id: 'default',
+			name: 'Default Channel',
+		});
+
+		await notifee.displayNotification({
+			id: '1',
+			title: 'Hello World!',
+			body: 'Teste de notificação',
+			android: {
+				channelId,
+				pressAction: {
+					id: 'default',
+				},
+			},
+		});
+	};
+
 	return (
 		<>
 			<AppHeader title='Lembretes' />
@@ -19,7 +41,7 @@ const Notifications = () => {
 				</Text>
 				<Button
 					mode='contained'
-					onPress={() => {}}
+					onPress={testNotification}
 					style={{
 						marginTop: 16,
 						backgroundColor: colors.primary,

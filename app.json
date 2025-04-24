@@ -5,6 +5,7 @@
 		"version": "1.0.0"
 	},
 	"android": {
+		"plugins": ["@notifee/react-native"],
 		"config": {
 			"googleMaps": {
 				"apiKey": "process.env.GOOGLE_MAPS_API_KEY"

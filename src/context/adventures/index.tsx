@@ -1,5 +1,26 @@
 import { createContext, useContext, useState } from 'react';
 
+const presavedAdventures: Adventure[] = [
+	{
+		id: '1',
+		name: 'Adventura 1',
+		description: 'Lorem ipsum',
+		date: '12/12/2025',
+	},
+	{
+		id: '2',
+		name: 'Adventura 2',
+		description: 'Lorem ipsum',
+		date: '12/12/2025',
+	},
+	{
+		id: '3',
+		name: 'Adventura 3',
+		description: 'Lorem ipsum',
+		date: '12/12/2025',
+	},
+];
+
 export interface Adventure {
 	id: string;
 	name: string;
@@ -22,7 +43,7 @@ export const AdventuresContext = createContext({
 });
 
 export const AdventuresProvider = ({ children }: { children: React.ReactNode }) => {
-	const [adventures, setAdventures] = useState<Adventure[]>([]);
+	const [adventures, setAdventures] = useState<Adventure[]>(presavedAdventures);
 	const [currentAdventure, setCurrentAdventure] = useState<Adventure | null>(null);
 
 	const addAdventure = (adventure: Adventure) => {

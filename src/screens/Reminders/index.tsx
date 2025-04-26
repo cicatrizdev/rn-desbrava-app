@@ -15,17 +15,19 @@ const Notifications = () => {
 			name: 'Default Channel',
 		});
 
-		await notifee.displayNotification({
-			id: '1',
-			title: 'Hello World!',
-			body: 'Teste de notificação',
-			android: {
-				channelId,
-				pressAction: {
-					id: 'default',
+		setTimeout(async () => {
+			await notifee.displayNotification({
+				id: '1',
+				title: 'Hello World!',
+				body: 'Teste de notificação',
+				android: {
+					channelId,
+					pressAction: {
+						id: 'default',
+					},
 				},
-			},
-		});
+			});
+		}, 2000);
 	};
 
 	return (

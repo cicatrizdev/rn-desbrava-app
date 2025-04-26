@@ -4,32 +4,11 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Button, Text } from 'react-native-paper';
 import { colors } from '../../styles/colors';
 import AppHeader from '../../components/AppHeader';
-import notifee from '@notifee/react-native';
+import { useNavigation } from '@react-navigation/native';
+import { RootStackNavigationProp } from '../../navigation';
 
 const Notifications = () => {
-	const [notificationId, setNotificationId] = useState<number>(1);
-	const testNotification = async () => {
-		await notifee.requestPermission();
-
-		const channelId = await notifee.createChannel({
-			id: 'default',
-			name: 'Default Channel',
-		});
-
-		// await notifee.displayNotification({
-		// 	id: String(notificationId),
-		// 	title: 'Hello World!',
-		// 	body: `Teste de notificação ${notificationId}`,
-		// 	android: {
-		// 		channelId,
-		// 		pressAction: {
-		// 			id: 'default',
-		// 		},
-		// 	},
-		// });
-		await notifee.cancelNotification('3');
-		// setNotificationId(notificationId + 1);
-	};
+	const navigation = useNavigation<RootStackNavigationProp>();
 
 	return (
 		<>
@@ -44,7 +23,7 @@ const Notifications = () => {
 				</Text>
 				<Button
 					mode='contained'
-					onPress={testNotification}
+					onPress={() => navigation.navigate('RemindersForm')}
 					style={{
 						marginTop: 16,
 						backgroundColor: colors.primary,

@@ -10,11 +10,13 @@ import Reminders from '../screens/Reminders';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import AdventureForm from '../screens/AdventureForm';
+import RemindersForm from '../screens/RemindersForm';
 
 export type RootStackParamList = {
 	Adventures: undefined;
 	Reminders: undefined;
 	AdventureForm: undefined;
+	RemindersForm: undefined;
 };
 
 export type RootStackNavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -104,6 +106,7 @@ export default function AppRootNavigator() {
 		<Stack.Navigator id={undefined} screenOptions={{ headerShown: false }}>
 			<Stack.Screen name='Adventures' component={BottomTabNavigator} />
 			<Stack.Screen name='AdventureForm' component={AdventureForm} />
+			<Stack.Screen name='RemindersForm' component={RemindersForm} />
 		</Stack.Navigator>
 	);
 }

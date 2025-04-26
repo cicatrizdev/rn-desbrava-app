@@ -15,31 +15,32 @@ export const RemindersContext = createContext({
 	deleteReminder: (id: string) => {},
 });
 
-export const AdventuresProvider = ({ children }: { children: React.ReactNode }) => {
-	const [adventures, setAdventures] = useState<Adventure[]>(presavedAdventures);
-	const [currentAdventure, setCurrentAdventure] = useState<Adventure | null>(null);
+export const RemindersProvider = ({ children }: { children: React.ReactNode }) => {
+	const [reminders, setReminders] = useState<Reminder[]>([]);
 
-	const addAdventure = (adventure: Adventure) => {
-		setAdventures([...adventures, adventure]);
+	const addReminder = (reminder: Reminder) => {
+		setReminders([...reminders, reminder]);
 	};
 
-	const editAdventure = (adventure: Adventure) => {
-		setAdventures(adventures.map((a) => (a.id === adventure.id ? adventure : a)));
+	const editReminder = (reminder: Reminder) => {
+		setReminders(reminders.map((r) => (r.id === reminder.id ? reminder : r)));
+	};
+
+	const deleteReminder = (id: string) => {
+		setReminders(reminders.filter((r) => r.id !== id));
 	};
 
 	return (
-		<AdventuresContext.Provider
-			value={{ adventures, addAdventure, currentAdventure, setCurrentAdventure, editAdventure }}
-		>
+		<RemindersContext.Provider value={{ reminders, addReminder, editReminder, deleteReminder }}>
 			{children}
-		</AdventuresContext.Provider>
+		</RemindersContext.Provider>
 	);
 };
 
-export const useAdventures = () => {
-	const context = useContext(AdventuresContext);
+export const useReminders = () => {
+	const context = useContext(RemindersContext);
 	if (!context) {
-		throw new Error('useAdventures must be used within an AdventuresProvider');
+		throw new Error('useReminders must be used within a RemindersProvider');
 	}
 	return context;
 };

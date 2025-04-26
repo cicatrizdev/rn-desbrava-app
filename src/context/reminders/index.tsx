@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from 'react';
+import notifee, { Trigger, TriggerType } from '@notifee/react-native';
 
 export interface Reminder {
 	id: string;
@@ -18,7 +19,34 @@ export const RemindersContext = createContext({
 export const RemindersProvider = ({ children }: { children: React.ReactNode }) => {
 	const [reminders, setReminders] = useState<Reminder[]>([]);
 
-	const addReminder = (reminder: Reminder) => {
+	const addReminder = async (reminder: Reminder) => {
+		await notifee.requestPermission();
+		await notifee.createChannel({
+			id: 'lembretes',
+			name: 'Lembretes de Aventuras',
+		});
+
+		const date = reminder.date && reminder.date.split('/');
+
+		const trigger = new Date(
+			Number(date[2]),
+			Number(date[1]) - 1,
+			Number(date[0])
+		).getMilliseconds();
+
+		await notifee.createTriggerNotification(
+			{
+				id: reminder.id,
+				title: reminder.title,
+				subtitle: reminder.subtitle,
+				body: reminder.description,
+			},
+			{
+				type: TriggerType.TIMESTAMP,
+				timestamp: trigger,
+			}
+		);
+
 		setReminders([...reminders, reminder]);
 	};
 

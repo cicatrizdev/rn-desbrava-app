@@ -16,18 +16,19 @@ const Notifications = () => {
 			name: 'Default Channel',
 		});
 
-		await notifee.displayNotification({
-			id: '90',
-			title: '',
-			body: '',
-			android: {
-				channelId,
-				pressAction: {
-					id: 'default',
-				},
-			},
-		});
-		setNotificationId(notificationId + 1);
+		// await notifee.displayNotification({
+		// 	id: String(notificationId),
+		// 	title: 'Hello World!',
+		// 	body: `Teste de notificação ${notificationId}`,
+		// 	android: {
+		// 		channelId,
+		// 		pressAction: {
+		// 			id: 'default',
+		// 		},
+		// 	},
+		// });
+		await notifee.cancelNotification('3');
+		// setNotificationId(notificationId + 1);
 	};
 
 	return (

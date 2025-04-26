@@ -1,5 +1,5 @@
 import { View, StyleSheet } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Button, Text } from 'react-native-paper';
 import { colors } from '../../styles/colors';
@@ -7,6 +7,7 @@ import AppHeader from '../../components/AppHeader';
 import notifee from '@notifee/react-native';
 
 const Notifications = () => {
+	const [notificationId, setNotificationId] = useState<number>(1);
 	const testNotification = async () => {
 		await notifee.requestPermission();
 
@@ -15,19 +16,18 @@ const Notifications = () => {
 			name: 'Default Channel',
 		});
 
-		setTimeout(async () => {
-			await notifee.displayNotification({
-				id: '1',
-				title: 'Hello World!',
-				body: 'Teste de notificação',
-				android: {
-					channelId,
-					pressAction: {
-						id: 'default',
-					},
+		await notifee.displayNotification({
+			id: '10',
+			title: 'Hello World!',
+			body: `Teste de notificação ${notificationId}`,
+			android: {
+				channelId,
+				pressAction: {
+					id: 'default',
 				},
-			});
-		}, 2000);
+			},
+		});
+		setNotificationId(notificationId + 1);
 	};
 
 	return (

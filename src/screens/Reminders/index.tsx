@@ -17,9 +17,9 @@ const Notifications = () => {
 		});
 
 		await notifee.displayNotification({
-			id: '10',
-			title: 'Hello World!',
-			body: `Teste de notificação ${notificationId}`,
+			id: '90',
+			title: '',
+			body: '',
 			android: {
 				channelId,
 				pressAction: {

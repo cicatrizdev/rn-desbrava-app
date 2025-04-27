@@ -32,8 +32,8 @@ const Notifications = () => {
 							data={reminders}
 							renderItem={({ item }) => (
 								<TouchableOpacity onPress={() => deleteReminder(item.id)}>
-									<Text>
-										{item.title} - {item.date}
+									<Text style={{ color: colors.onSurface }}>
+										{item.title} - {item.subtitle}
 									</Text>
 								</TouchableOpacity>
 							)}

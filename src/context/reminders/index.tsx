@@ -35,6 +35,9 @@ export const RemindersProvider = ({ children }: { children: React.ReactNode }) =
 				title: reminder.title,
 				subtitle: reminder.subtitle,
 				body: reminder.description,
+				android: {
+					channelId: 'lembretes',
+				},
 			},
 			{
 				type: TriggerType.TIMESTAMP,

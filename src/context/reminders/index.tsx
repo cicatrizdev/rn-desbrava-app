@@ -21,7 +21,7 @@ export const RemindersProvider = ({ children }: { children: React.ReactNode }) =
 
 	const addReminder = async (reminder: Reminder) => {
 		await notifee.requestPermission();
-		await notifee.createChannel({
+		const channelId = await notifee.createChannel({
 			id: 'lembretes',
 			name: 'Lembretes de Aventuras',
 		});
@@ -36,7 +36,7 @@ export const RemindersProvider = ({ children }: { children: React.ReactNode }) =
 				subtitle: reminder.subtitle,
 				body: reminder.description,
 				android: {
-					channelId: 'lembretes',
+					channelId,
 				},
 			},
 			{

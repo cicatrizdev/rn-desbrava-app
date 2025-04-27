@@ -5,8 +5,8 @@ export interface Reminder {
 	id: string;
 	title: string;
 	description: string;
+	date: number;
 	subtitle?: string;
-	date?: string;
 }
 
 export const RemindersContext = createContext({
@@ -26,13 +26,8 @@ export const RemindersProvider = ({ children }: { children: React.ReactNode }) =
 			name: 'Lembretes de Aventuras',
 		});
 
-		const date = reminder.date && reminder.date.split('/');
-
-		const trigger = new Date(
-			Number(date[2]),
-			Number(date[1]) - 1,
-			Number(date[0])
-		).getMilliseconds();
+		const date = new Date(Date.now());
+		date.setSeconds(date.getSeconds() + 5);
 
 		await notifee.createTriggerNotification(
 			{
@@ -43,7 +38,7 @@ export const RemindersProvider = ({ children }: { children: React.ReactNode }) =
 			},
 			{
 				type: TriggerType.TIMESTAMP,
-				timestamp: trigger,
+				timestamp: date.getTime(),
 			}
 		);
 

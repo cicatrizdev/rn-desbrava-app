@@ -4,18 +4,19 @@ import AppHeader from '../../components/AppHeader';
 import { useNavigation } from '@react-navigation/native';
 import { RootStackNavigationProp } from '../../navigation';
 import { Button, RadioButton, TextInput } from 'react-native-paper';
-import { Reminder } from '../../context/reminders';
+import { Reminder, useReminders } from '../../context/reminders';
 import { useAdventures } from '../../context/adventures';
 import { colors } from '../../styles/colors';
 
 const RemindersForm = () => {
 	const navigation = useNavigation<RootStackNavigationProp>();
 	const { adventures } = useAdventures();
+	const { addReminder } = useReminders();
 	const [reminderForm, setReminderForm] = useState<Reminder>({
 		id: '',
 		title: '',
 		description: '',
-		date: '',
+		date: 0,
 	});
 	const [checked, setChecked] = useState<'semana' | 'dia' | 'hora'>('semana');
 	const [selectedAdventure, setSelectedAdventure] = useState<string | null>(null);
@@ -23,8 +24,31 @@ const RemindersForm = () => {
 		setReminderForm({ ...reminderForm, [key]: value });
 	};
 
+	const getTriggerDate = () => {
+		const adventure = adventures.find((adventure) => adventure.id === selectedAdventure);
+
+		if (checked === 'semana') {
+			return new Date(adventure?.date).getTime() - 7 * 24 * 60 * 60 * 1000;
+		}
+
+		if (checked === 'dia') {
+			return new Date(adventure?.date).getTime() - 24 * 60 * 60 * 1000;
+		}
+
+		return new Date(adventure?.date).getTime() - 1 * 60 * 60 * 1000;
+	};
+
 	const handleAddReminder = () => {
-		console.log(reminderForm);
+		const adventure = adventures.find((adventure) => adventure.id === selectedAdventure);
+		const reminderData = {
+			...reminderForm,
+			id: adventure?.id,
+			date: getTriggerDate(),
+			subtitle: adventure?.name,
+		};
+
+		addReminder(reminderData);
+		navigation.goBack();
 	};
 
 	return (

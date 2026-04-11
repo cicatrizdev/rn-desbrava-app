@@ -7,10 +7,21 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { colors } from '../styles/colors';
 import Adventures from '../screens/Adventures';
 import Reminders from '../screens/Reminders';
+import { createStackNavigator } from '@react-navigation/stack';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import AdventureForm from '../screens/AdventureForm';
+
+export type RootStackParamList = {
+	Adventures: undefined;
+	Reminders: undefined;
+	AdventureForm: undefined;
+};
+
+export type RootStackNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 const Tab = createBottomTabNavigator();
 
-export default function MyComponent() {
+function BottomTabNavigator() {
 	return (
 		<Tab.Navigator
 			id={undefined}
@@ -43,7 +54,6 @@ export default function MyComponent() {
 						if (options.tabBarIcon) {
 							return options.tabBarIcon({ focused, color, size: 24 });
 						}
-
 						return null;
 					}}
 					activeColor={colors.onSurface}
@@ -84,5 +94,16 @@ export default function MyComponent() {
 				}}
 			/>
 		</Tab.Navigator>
+	);
+}
+
+const Stack = createStackNavigator();
+
+export default function AppRootNavigator() {
+	return (
+		<Stack.Navigator id={undefined} screenOptions={{ headerShown: false }}>
+			<Stack.Screen name='Adventures' component={BottomTabNavigator} />
+			<Stack.Screen name='AdventureForm' component={AdventureForm} />
+		</Stack.Navigator>
 	);
 }
